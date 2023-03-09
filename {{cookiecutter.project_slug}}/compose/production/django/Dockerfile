@@ -79,10 +79,11 @@ RUN apt-get update && apt-get install --no-install-recommends -y \
   sqlite3 spatialite-bin libsqlite3-mod-spatialite \
   python3-all-dev python3-dev \
   python3-gdal python3-psycopg2 python3-ldap \
-  python3-pip python3-pil python3-lxml python3-pylibmc \
-  # cleaning up unused files
-  && apt-get purge -y --auto-remove -o APT::AutoRemove::RecommendsImportant=false \
-  && rm -rf /var/lib/apt/lists/*
+  python3-pip python3-pil python3-lxml python3-pylibmc
+
+# Cleaning up unused files
+RUN apt-get purge -y --auto-remove -o APT::AutoRemove::RecommendsImportant=false \
+    && rm -rf /var/lib/apt/lists/*
 
 # All absolute dir copies ignore workdir instruction. All relative dir copies are wrt to the workdir instruction
 # copy python dependency wheels from python-build-stage
