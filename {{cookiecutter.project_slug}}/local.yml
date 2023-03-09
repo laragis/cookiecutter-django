@@ -9,7 +9,7 @@ x-common-django:
   build:
     context: .
     dockerfile: ./compose/local/django/Dockerfile
-  image: ttungbmt/{{ cookiecutter.project_slug }}_local_django
+  image: ttungbmt/{{ cookiecutter.project_slug }}_local_django:${APP_VERSION}
   depends_on:
     postgres:
       condition: service_healthy

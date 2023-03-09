@@ -25,8 +25,7 @@ x-common-django:
       DJANGO_AZURE_ACCOUNT_NAME: ${DJANGO_AZURE_ACCOUNT_NAME}
       {%- endif %}
     {%- endif %}
-
-  image: ttungbmt/{{ cookiecutter.project_slug }}_production_django
+  image: ttungbmt/{{ cookiecutter.project_slug }}_production_django:${APP_VERSION}
   {%- if cookiecutter.cloud_provider == 'None' %}
   volumes:
     - production_django_media:/app/{{ cookiecutter.project_slug }}/media
@@ -100,6 +99,7 @@ services:
     volumes:
       - production_postgres_data_backups:/backups:z
   {%- endif %}
+
   {%- if cookiecutter.cloud_provider == 'None' %}
   nginx:
     build:
