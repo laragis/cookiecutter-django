@@ -1,5 +1,9 @@
 # General
 # ------------------------------------------------------------------------------
+SITE_HEADER="{{ cookiecutter.project_name }} Admin"
+SITE_TITLE="{{ cookiecutter.project_name }} Admin Site"
+INDEX_TITLE="{{ cookiecutter.project_name }} Admin"
+
 USE_DOCKER=yes
 IPYTHONDIR=/app/.ipython
 

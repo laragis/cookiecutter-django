@@ -8,7 +8,7 @@ from django.urls import include, path
 from django.views import defaults as default_views
 from django.views.generic import TemplateView
 {%- if cookiecutter.use_drf == 'y' %}
-from drf_spectacular.views import SpectacularAPIView, SpectacularSwaggerView
+from drf_spectacular.views import SpectacularAPIView, SpectacularSwaggerView, SpectacularRedocView
 from rest_framework.authtoken.views import obtain_auth_token
 {%- endif %}
 
@@ -36,12 +36,11 @@ urlpatterns += [
     path("api/", include("config.api_router")),
     # DRF auth token
     path("auth-token/", obtain_auth_token),
+    # Django OAuth Toolkit
+    path('o/', include('oauth2_provider.urls', namespace='oauth2_provider')),
     path("api/schema/", SpectacularAPIView.as_view(), name="api-schema"),
-    path(
-        "api/docs/",
-        SpectacularSwaggerView.as_view(url_name="api-schema"),
-        name="api-docs",
-    ),
+    path("api/swagger-ui/", SpectacularSwaggerView.as_view(url_name="api-schema"), name="swagger-ui"),
+    path("api/redoc/", SpectacularRedocView.as_view(url_name="api-schema"), name="redoc"),
 ]
 {%- endif %}
 

@@ -1,5 +1,9 @@
 # General
 # ------------------------------------------------------------------------------
+SITE_HEADER="{{ cookiecutter.project_name }} Admin"
+SITE_TITLE="{{ cookiecutter.project_name }} Admin Site"
+INDEX_TITLE="{{ cookiecutter.project_name }} Admin"
+
 # DJANGO_READ_DOT_ENV_FILE=True
 DJANGO_SETTINGS_MODULE=config.settings.production
 DJANGO_SECRET_KEY=!!!SET DJANGO_SECRET_KEY!!!

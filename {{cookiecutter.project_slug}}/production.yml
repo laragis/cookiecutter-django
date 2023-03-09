@@ -8,42 +8,49 @@ volumes:
   production_django_media: {}
   {%- endif %}
 
-services:
-  django:{% if cookiecutter.use_celery == 'y' %} &django{% endif %}
-    build:
-      context: .
-      dockerfile: ./compose/production/django/Dockerfile
-      {%- if cookiecutter.frontend_pipeline == 'Webpack' and cookiecutter.use_whitenoise == 'n' %}
-      args:
-        # These variable can be defined in an .env file in the root of the repo
-        {%- if cookiecutter.cloud_provider == 'AWS' %}
-        DJANGO_AWS_STORAGE_BUCKET_NAME: ${DJANGO_AWS_STORAGE_BUCKET_NAME}
-        DJANGO_AWS_S3_CUSTOM_DOMAIN: ${DJANGO_AWS_S3_CUSTOM_DOMAIN}
-        {%- elif cookiecutter.cloud_provider == 'GCP' %}
-        DJANGO_GCP_STORAGE_BUCKET_NAME: ${DJANGO_GCP_STORAGE_BUCKET_NAME}
-        {%- elif cookiecutter.cloud_provider == 'Azure' %}
-        DJANGO_AZURE_ACCOUNT_NAME: ${DJANGO_AZURE_ACCOUNT_NAME}
-        {%- endif %}
+x-common-django:
+  &default-common-django
+  build:
+    context: .
+    dockerfile: ./compose/production/django/Dockerfile
+    {%- if cookiecutter.frontend_pipeline == 'Webpack' and cookiecutter.use_whitenoise == 'n' %}
+    args:
+      # These variable can be defined in an .env file in the root of the repo
+      {%- if cookiecutter.cloud_provider == 'AWS' %}
+      DJANGO_AWS_STORAGE_BUCKET_NAME: ${DJANGO_AWS_STORAGE_BUCKET_NAME}
+      DJANGO_AWS_S3_CUSTOM_DOMAIN: ${DJANGO_AWS_S3_CUSTOM_DOMAIN}
+      {%- elif cookiecutter.cloud_provider == 'GCP' %}
+      DJANGO_GCP_STORAGE_BUCKET_NAME: ${DJANGO_GCP_STORAGE_BUCKET_NAME}
+      {%- elif cookiecutter.cloud_provider == 'Azure' %}
+      DJANGO_AZURE_ACCOUNT_NAME: ${DJANGO_AZURE_ACCOUNT_NAME}
       {%- endif %}
-
-    image: {{ cookiecutter.project_slug }}_production_django
-    {%- if cookiecutter.cloud_provider == 'None' %}
-    volumes:
-      - production_django_media:/app/{{ cookiecutter.project_slug }}/media
     {%- endif %}
-    depends_on:
-      - postgres
-      - redis
-    env_file:
-      - ./.envs/.production/.django
-      - ./.envs/.production/.postgres
+
+  image: ttungbmt/{{ cookiecutter.project_slug }}_production_django
+  {%- if cookiecutter.cloud_provider == 'None' %}
+  volumes:
+    - production_django_media:/app/{{ cookiecutter.project_slug }}/media
+  {%- endif %}
+  depends_on:
+    postgres:
+      condition: service_healthy
+    redis:
+      condition: service_healthy
+  env_file:
+    - ./.envs/.production/.django
+    - ./.envs/.production/.postgres
+
+
+services:
+  django:
+    <<: *default-common-django
     command: /start
 
   postgres:
     build:
       context: .
       dockerfile: ./compose/production/postgres/Dockerfile
-    image: {{ cookiecutter.project_slug }}_production_postgres
+    image: ttungbmt/{{ cookiecutter.project_slug }}_production_postgres
     volumes:
       - production_postgres_data:/var/lib/postgresql/data
       - production_postgres_data_backups:/backups
@@ -54,7 +61,7 @@ services:
     build:
       context: .
       dockerfile: ./compose/production/traefik/Dockerfile
-    image: {{ cookiecutter.project_slug }}_production_traefik
+    image: ttungbmt/{{ cookiecutter.project_slug }}_production_traefik
     depends_on:
       - django
     volumes:
@@ -71,18 +78,15 @@ services:
   {%- if cookiecutter.use_celery == 'y' %}
 
   celeryworker:
-    <<: *django
-    image: {{ cookiecutter.project_slug }}_production_celeryworker
+    <<: *default-common-django
     command: /start-celeryworker
 
   celerybeat:
-    <<: *django
-    image: {{ cookiecutter.project_slug }}_production_celerybeat
+    <<: *default-common-django
     command: /start-celerybeat
 
   flower:
-    <<: *django
-    image: {{ cookiecutter.project_slug }}_production_flower
+    <<: *default-common-django
     command: /start-flower
   {%- endif %}
   {%- if cookiecutter.cloud_provider == 'AWS' %}
@@ -101,7 +105,7 @@ services:
     build:
       context: .
       dockerfile: ./compose/production/nginx/Dockerfile
-    image: {{ cookiecutter.project_slug }}_local_nginx
+    image: ttungbmt/{{ cookiecutter.project_slug }}_local_nginx
     depends_on:
       - django
     volumes:
