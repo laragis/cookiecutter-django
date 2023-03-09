@@ -31,10 +31,8 @@ x-common-django:
     - production_django_media:/app/{{ cookiecutter.project_slug }}/media
   {%- endif %}
   depends_on:
-    postgres:
-      condition: service_healthy
-    redis:
-      condition: service_healthy
+    - postgres
+    - redis
   env_file:
     - ./.envs/.production/.django
     - ./.envs/.production/.postgres

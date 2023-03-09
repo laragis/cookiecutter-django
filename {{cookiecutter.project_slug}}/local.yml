@@ -11,15 +11,12 @@ x-common-django:
     dockerfile: ./compose/local/django/Dockerfile
   image: ttungbmt/{{ cookiecutter.project_slug }}_local_django:${APP_VERSION}
   depends_on:
-    postgres:
-      condition: service_healthy
+    - postgres
     {%- if cookiecutter.use_celery == 'y' %}
-    redis:
-      condition: service_healthy
+    - redis
     {%- endif %}
     {%- if cookiecutter.use_mailhog == 'y' %}
-    mailhog:
-      condition: service_healthy
+    - mailhog
     {%- endif %}
   volumes:
     - .:/app:z

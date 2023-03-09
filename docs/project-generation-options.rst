@@ -55,12 +55,11 @@ use_docker:
 postgresql_version:
     Select a PostgreSQL_ version to use. The choices are:
 
-    1. 15-3.3
-    2. 14-3.3
-    3. 13-3.3
-    4. 12-3.3
-    5. 11-3.3
-    6. 10-3.3
+    1. 14-3.3
+    2. 13-3.3
+    3. 12-3.3
+    4. 11-3.3
+    5. 10-3.3
 
 cloud_provider:
     Select a cloud provider for static & media files. The choices are:
