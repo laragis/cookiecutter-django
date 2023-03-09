@@ -68,10 +68,18 @@ RUN addgroup --system django \
 
 # Install required system dependencies
 RUN apt-get update && apt-get install --no-install-recommends -y \
-  # psycopg2 dependencies
-  libpq-dev \
-  # Translations dependencies
-  gettext \
+  # @ttungbmt
+  # Prepare dependencies
+  libgdal-dev libpq-dev libxml2-dev \
+  libxml2 libxslt1-dev zlib1g-dev libjpeg-dev \
+  libmemcached-dev libldap2-dev libsasl2-dev libffi-dev \
+  # Install extra
+  # iputils-ping telnet git wget curl vim exa bat \
+  gcc zip gettext geoip-bin cron \
+  sqlite3 spatialite-bin libsqlite3-mod-spatialite \
+  python3-all-dev python3-dev \
+  python3-gdal python3-psycopg2 python3-ldap \
+  python3-pip python3-pil python3-lxml python3-pylibmc \
   # cleaning up unused files
   && apt-get purge -y --auto-remove -o APT::AutoRemove::RecommendsImportant=false \
   && rm -rf /var/lib/apt/lists/*
