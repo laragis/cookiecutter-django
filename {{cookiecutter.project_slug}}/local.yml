@@ -114,7 +114,7 @@ services:
     build:
       context: .
       dockerfile: ./compose/local/node/Dockerfile
-    image: {{ cookiecutter.project_slug }}_local_node
+    image: ttungbmt/{{ cookiecutter.project_slug }}_local_node
     container_name: {{ cookiecutter.project_slug }}_local_node
     depends_on:
       - django
