@@ -14,9 +14,7 @@ from rest_framework.authtoken.views import obtain_auth_token
 
 urlpatterns = [
     path("", TemplateView.as_view(template_name="pages/home.html"), name="home"),
-    path(
-        "about/", TemplateView.as_view(template_name="pages/about.html"), name="about"
-    ),
+    path("about/", TemplateView.as_view(template_name="pages/about.html"), name="about"),
     # Django Admin, use {% raw %}{% url 'admin:index' %}{% endraw %}
     path(settings.ADMIN_URL, admin.site.urls),
     # User management
@@ -37,7 +35,8 @@ urlpatterns += [
     # DRF auth token
     path("auth-token/", obtain_auth_token),
     # Django OAuth Toolkit
-    path('o/', include('oauth2_provider.urls', namespace='oauth2_provider')),
+    # path('o/', include('oauth2_provider.urls', namespace='oauth2_provider')),
+
     path("api/schema/", SpectacularAPIView.as_view(), name="api-schema"),
     path("api/swagger-ui/", SpectacularSwaggerView.as_view(url_name="api-schema"), name="swagger-ui"),
     path("api/redoc/", SpectacularRedocView.as_view(url_name="api-schema"), name="redoc"),

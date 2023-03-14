@@ -66,3 +66,6 @@ pydash==6.0.2 # https://github.com/dgilland/pydash
 
 # Production
 invoke==2.0.0 # https://github.com/pyinvoke/invoke
+
+# Admin
+django-admin-interface==0.24.2 # https://github.com/fabiocaccamo/django-admin-interface
