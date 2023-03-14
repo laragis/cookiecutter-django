@@ -4,11 +4,26 @@ set -o errexit
 set -o pipefail
 set -o nounset
 
+INVOKE_LOG_STDOUT=${INVOKE_LOG_STDOUT:-False}
+invoke () {
+    if [ $INVOKE_LOG_STDOUT = 'true' ] || [ $INVOKE_LOG_STDOUT = 'True' ]
+    then
+        /usr/local/bin/invoke $@
+    else
+        /usr/local/bin/invoke $@ > /usr/src/django/invoke.log 2>&1
+    fi
+    echo "$@ tasks done"
+}
 
-{% if cookiecutter.use_celery == 'y' %}
+cmd="$@"
+
+echo "-----------------------------------------------------"
+echo "STARTING DJANGO ENTRYPOINT $(date)"
+echo "-----------------------------------------------------"
+
 # N.B. If only .env files supported variable expansion...
 export CELERY_BROKER_URL="${REDIS_URL}"
-{% endif %}
+
 
 if [ -z "${POSTGRES_USER}" ]; then
     base_postgres_image_default_user='postgres'
@@ -16,34 +31,40 @@ if [ -z "${POSTGRES_USER}" ]; then
 fi
 export DATABASE_URL="postgres://${POSTGRES_USER}:${POSTGRES_PASSWORD}@${POSTGRES_HOST}:${POSTGRES_PORT}/${POSTGRES_DB}"
 
-python << END
-import sys
-import time
 
-import psycopg2
+invoke settingenv
+invoke waitfordbs
 
-suggest_unrecoverable_after = 30
-start = time.time()
+source $HOME/.bashrc
+source $HOME/.override_env
 
-while True:
-    try:
-        psycopg2.connect(
-            dbname="${POSTGRES_DB}",
-            user="${POSTGRES_USER}",
-            password="${POSTGRES_PASSWORD}",
-            host="${POSTGRES_HOST}",
-            port="${POSTGRES_PORT}",
-        )
-        break
-    except psycopg2.OperationalError as error:
-        sys.stderr.write("Waiting for PostgreSQL to become available...\n")
+IS_CELERY=${IS_CELERY:-False}
+if [ ${IS_CELERY} = "true" ]  || [ ${IS_CELERY} = "True" ]
+then
+    invoke waitformigrations
+    echo "Executing Celery server $cmd"
+else
 
-        if time.time() - start > suggest_unrecoverable_after:
-            sys.stderr.write("  This is taking longer than expected. The following exception may be indicative of an unrecoverable error: '{}'\n".format(error))
+    invoke migrations
+    invoke preparefixture
 
-    time.sleep(1)
-END
+    if [ ${FORCE_REINIT} = "true" ]  || [ ${FORCE_REINIT} = "True" ] || [ ! -e "/mnt/volumes/statics/django_init.lock" ]; then
+        invoke loaddata
+        invoke updateadmin
+        invoke initialized
+    fi
 
->&2 echo 'PostgreSQL is available'
+    if [ ${APP_ENV} = "production" ]; then
+        invoke collectstatic
+    fi
 
-exec "$@"
+    echo "Executing Server $cmd"
+fi
+
+echo "-----------------------------------------------------"
+echo "FINISHED DJANGO ENTRYPOINT --------------------------"
+echo "-----------------------------------------------------"
+
+# Run the CMD
+echo "Got command $cmd"
+exec $cmd

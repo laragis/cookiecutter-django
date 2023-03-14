@@ -29,6 +29,8 @@ services:
     << : *default-common-django
     container_name: {{ cookiecutter.project_slug }}_local_django
     command: /start
+    environment:
+      - IS_CELERY=False
     ports:
       - "${DJANGO_PORT:-8000}:8000"
 
@@ -85,6 +87,8 @@ services:
       {%- if cookiecutter.use_mailhog == 'y' %}
       - mailhog
       {%- endif %}
+    environment:
+      - IS_CELERY=True
     ports: []
     command: /start-celeryworker
 
@@ -97,12 +101,16 @@ services:
       {%- if cookiecutter.use_mailhog == 'y' %}
       - mailhog
       {%- endif %}
+    environment:
+      - IS_CELERY=True
     ports: []
     command: /start-celerybeat
 
   flower:
     <<: *default-common-django
     container_name: {{ cookiecutter.project_slug }}_local_flower
+    environment:
+      - IS_CELERY=True
     ports:
       - "${FLOWER_PORT:-5555}:5555"
     command: /start-flower

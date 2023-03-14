@@ -46,7 +46,7 @@ RUN apt-get update && apt-get install --no-install-recommends -y \
   libxml2 libxslt1-dev zlib1g-dev libjpeg-dev \
   libmemcached-dev libldap2-dev libsasl2-dev libffi-dev \
   # Install extra
-  # iputils-ping telnet git wget curl vim exa bat \
+  iputils-ping telnet git wget curl vim exa bat \
   gcc zip gettext geoip-bin cron \
   sqlite3 spatialite-bin libsqlite3-mod-spatialite \
   python3-all-dev python3-dev \

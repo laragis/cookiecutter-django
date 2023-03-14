@@ -1,5 +1,7 @@
 # General
 # ------------------------------------------------------------------------------
+APP_ENV=local
+
 SITE_HEADER="{{ cookiecutter.project_name }} Admin"
 SITE_TITLE="{{ cookiecutter.project_name }} Admin Site"
 INDEX_TITLE="{{ cookiecutter.project_name }} Admin"
@@ -8,8 +10,20 @@ DJANGO_SUPERUSER_USERNAME=admin
 DJANGO_SUPERUSER_EMAIL=admin@admin.com
 DJANGO_SUPERUSER_PASSWORD=admin@123
 
+STATIC_ROOT=/mnt/volumes/statics/static/
+MEDIA_ROOT=/mnt/volumes/statics/uploads/
+
+FORCE_REINIT=False
+INVOKE_LOG_STDOUT=True
+
 USE_DOCKER=yes
 IPYTHONDIR=/app/.ipython
+
+# Django OAuth Toolkit
+# ------------------------------------------------------------------------------
+OAUTH2_API_KEY=
+OAUTH2_CLIENT_ID=Jrchz2oPY3akmzndmgUTYrs9gczlgoV20YPSvqaV
+OAUTH2_CLIENT_SECRET=rCnp5txobUo83EpQEblM8fVj3QT5zb5qRfxNsuPzCqZaiRyIoxM4jdgMiZKFfePBHYXCLd7B8NlkfDBY9HKeIQPcy5Cp08KQNpRHQbjpLItDHv12GvkSeXp6OxaUETv3
 
 {%- if cookiecutter.use_celery == 'y' %}
 # Redis
@@ -18,6 +32,7 @@ REDIS_URL=redis://redis:6379/0
 
 # Celery
 # ------------------------------------------------------------------------------
+CELERY_BROKER_URL="${REDIS_URL}"
 
 # Flower
 CELERY_FLOWER_USER=!!!SET CELERY_FLOWER_USER!!!

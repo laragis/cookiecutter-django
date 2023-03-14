@@ -63,6 +63,7 @@ drf-writable-nested==0.1.0 # https://github.com/beda-software/drf-writable-neste
 
 # Utils
 pydash==6.0.2 # https://github.com/dgilland/pydash
+pendulum==2.1.2 # https://github.com/sdispater/pendulum
 
 # Production
 invoke==2.0.0 # https://github.com/pyinvoke/invoke
