@@ -1,6 +1,7 @@
 version: '3'
 
 volumes:
+  {{ cookiecutter.project_slug }}_local_django_statics: {}
   {{ cookiecutter.project_slug }}_local_postgres_data: {}
   {{ cookiecutter.project_slug }}_local_postgres_data_backups: {}
 
@@ -20,6 +21,7 @@ x-common-django:
     {%- endif %}
   volumes:
     - .:/app:z
+    - {{ cookiecutter.project_slug }}_local_django_statics:/mnt/volumes/statics
   env_file:
     - ./.envs/.local/.django
     - ./.envs/.local/.postgres

@@ -62,9 +62,14 @@ ENV BUILD_ENV ${BUILD_ENVIRONMENT}
 
 WORKDIR ${APP_HOME}
 
-RUN addgroup --system django \
-    && adduser --system --ingroup django django
+# Add a non-root user to prevent files being created with root permissions on host machine.
+ARG PUID=1000
+ENV PUID ${PUID}
+ARG PGID=1000
+ENV PGID ${PGID}
 
+RUN addgroup --system --gid ${PGID} django \
+    && adduser --system --ingroup django -u ${PUID} django
 
 # Install required system dependencies
 RUN apt-get update && apt-get install --no-install-recommends -y \

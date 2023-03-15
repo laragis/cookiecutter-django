@@ -1,6 +1,7 @@
 version: '3'
 
 volumes:
+  production_django_statics: {}
   production_postgres_data: {}
   production_postgres_data_backups: {}
   production_traefik: {}
