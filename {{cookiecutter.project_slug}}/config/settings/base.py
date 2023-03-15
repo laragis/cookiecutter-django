@@ -82,11 +82,13 @@ THIRD_PARTY_APPS = [
     "django_celery_beat",
 {%- endif %}
 {%- if cookiecutter.use_drf == "y" %}
+    # REST
     "rest_framework",
     "rest_framework.authtoken",
     "rest_framework_gis",
     "corsheaders",
     "drf_spectacular",
+    "dynamic_rest",
 {%- endif %}
 {%- if cookiecutter.frontend_pipeline == 'Webpack' %}
     "webpack_loader",
@@ -96,6 +98,8 @@ THIRD_PARTY_APPS = [
     "guardian",
     # "oauth2_provider",
 
+    # Utility
+    "django_filters",
     "colorfield",
 ]
 
