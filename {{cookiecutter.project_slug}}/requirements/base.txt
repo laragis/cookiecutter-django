@@ -60,7 +60,7 @@ djangorestframework-guardian==0.3.0 # https://github.com/rpkilby/django-rest-fra
 djangorestframework-gis==1.0 # https://github.com/openwisp/django-rest-framework-gis
 drf-extensions==0.7.1 # https://github.com/chibisov/drf-extensions
 drf-writable-nested==0.1.0 # https://github.com/beda-software/drf-writable-nested
-dynamic-rest==2.1.2 # https://github.com/AltSchool/dynamic-rest
+# dynamic-rest==2.1.2 # https://github.com/AltSchool/dynamic-rest
 django-filter==22.1 # https://github.com/carltongibson/django-filter
 
 # Utils

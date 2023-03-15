@@ -88,7 +88,7 @@ THIRD_PARTY_APPS = [
     "rest_framework_gis",
     "corsheaders",
     "drf_spectacular",
-    "dynamic_rest",
+    # "dynamic_rest",
 {%- endif %}
 {%- if cookiecutter.frontend_pipeline == 'Webpack' %}
     "webpack_loader",
@@ -358,6 +358,10 @@ REST_FRAMEWORK = {
     "DEFAULT_PERMISSION_CLASSES": ("rest_framework.permissions.IsAuthenticated",),
     "DEFAULT_SCHEMA_CLASS": "drf_spectacular.openapi.AutoSchema",
 }
+
+REST_API_DEFAULT_PAGE = env.int("REST_API_DEFAULT_PAGE", 1)
+REST_API_DEFAULT_PAGE_SIZE = env.int("REST_API_DEFAULT_PAGE_SIZE", 10)
+REST_API_DEFAULT_PAGE_QUERY_PARAM = env.str("REST_API_DEFAULT_PAGE_QUERY_PARAM", "page_size")
 
 # django-cors-headers - https://github.com/adamchainz/django-cors-headers#setup
 CORS_URLS_REGEX = r"^/api/.*$"

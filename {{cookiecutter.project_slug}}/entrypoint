@@ -12,39 +12,28 @@ invoke () {
     else
         /usr/local/bin/invoke $@ > /usr/src/django/invoke.log 2>&1
     fi
-    echo "$@ tasks done"
+    echo -e "$(c C)$@ tasks done$(c)"
 }
 
 cmd="$@"
 
+source $HOME/.bashrc
+
 echo "-----------------------------------------------------"
-echo "STARTING DJANGO ENTRYPOINT $(date)"
+echo -e "$(c G)STARTING DJANGO ENTRYPOINT $(date)$(c)"
 echo "-----------------------------------------------------"
-
-# N.B. If only .env files supported variable expansion...
-export CELERY_BROKER_URL="${REDIS_URL}"
-
-
-if [ -z "${POSTGRES_USER}" ]; then
-    base_postgres_image_default_user='postgres'
-    export POSTGRES_USER="${base_postgres_image_default_user}"
-fi
-export DATABASE_URL="postgres://${POSTGRES_USER}:${POSTGRES_PASSWORD}@${POSTGRES_HOST}:${POSTGRES_PORT}/${POSTGRES_DB}"
-
 
 invoke settingenv
-invoke waitfordbs
 
-source $HOME/.bashrc
 source $HOME/.override_env
 
-IS_CELERY=${IS_CELERY:-False}
+invoke waitfordbs
+
 if [ ${IS_CELERY} = "true" ]  || [ ${IS_CELERY} = "True" ]
 then
     invoke waitformigrations
     echo "Executing Celery server $cmd"
 else
-
     invoke migrations
     invoke preparefixture
 
@@ -62,7 +51,7 @@ else
 fi
 
 echo "-----------------------------------------------------"
-echo "FINISHED DJANGO ENTRYPOINT --------------------------"
+echo -e "$(c G)FINISHED DJANGO ENTRYPOINT$(c) --------------------------"
 echo "-----------------------------------------------------"
 
 # Run the CMD
